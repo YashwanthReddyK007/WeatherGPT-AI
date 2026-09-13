@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeatherGPT - SIH Final Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  @page {
+    size: 16in 9in; /* 16:9 widescreen presentation */
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #070d18;
+    color: #f1f5f9;
+    overflow-x: hidden;
+  }
+
+  .slide {
+    width: 100vw;
+    min-height: 100vh;
+    padding: 50px 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: radial-gradient(circle at 85% 15%, rgba(0, 210, 223, 0.08), transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(255, 101, 0, 0.06), transparent 35%),
+                #070d18;
+    page-break-after: always;
+    border-bottom: 2px solid #1e293b;
+    position: relative;
+  }
+
+  /* Slide Header */
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 18px;
+  }
+
+  .slide-title-area h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32pt;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #ffffff 0%, #00d2df 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .slide-subtitle {
+    font-size: 13pt;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  .slide-tag {
+    background: rgba(0, 210, 223, 0.12);
+    border: 1px solid #00d2df;
+    color: #00d2df;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* Slide Body */
+  .slide-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 24px 0;
+  }
+
+  /* Slide Footer */
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 14px;
+    font-size: 10pt;
+    color: #64748b;
+  }
+
+  .slide-footer strong {
+    color: #00d2df;
+  }
+
+  /* Grids and Cards */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+
+  .card.highlight {
+    border-color: #00d2df;
+    background: rgba(0, 210, 223, 0.04);
+  }
+
+  .card.alert {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.06);
+  }
+
+  .card h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16pt;
+    color: #ffffff;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card p {
+    font-size: 11pt;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .card ul {
+    list-style: none;
+    margin-top: 10px;
+  }
+
+  .card ul li {
+    font-size: 10.5pt;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .card ul li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: #00d2df;
+    font-weight: bold;
+  }
+
+  /* Title Slide Specifics */
+  .title-slide {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #0f2444 0%, #060b13 100%);
+  }
+
+  .badge-banner {
+    display: inline-flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .title-slide h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 56pt;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    color: #ffffff;
+    margin-bottom: 12px;
+    text-shadow: 0 0 40px rgba(0, 210, 223, 0.3);
+  }
+
+  .title-slide h1 span {
+    color: #00d2df;
+  }
+
+  .title-slide .tagline {
+    font-size: 18pt;
+    color: #94a3b8;
+    max-width: 850px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+
+  .meta-box {
+    display: flex;
+    gap: 40px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-size: 11pt;
+  }
+
+  .meta-box div span {
+    color: #64748b;
+    display: block;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .meta-box div strong {
+    color: #ffffff;
+  }
+
+  /* Speaker Notes for presenter */
+  .speaker-notes {
+    background: rgba(255, 101, 0, 0.08);
+    border-left: 4px solid #ff6500;
+    padding: 12px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 18px;
+    font-size: 9.5pt;
+    color: #fdba74;
+  }
+
+  .speaker-notes strong {
+    color: #ff6500;
+    text-transform: uppercase;
+    font-size: 8.5pt;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* Navigation Bar for browser mode */
+  .nav-bar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+  }
+
+  .nav-btn {
+    background: #00d2df;
+    color: #070d18;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-size: 11pt;
+    box-shadow: 0 4px 15px rgba(0, 210, 223, 0.4);
+    transition: transform 0.1s ease;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  @media print {
+    .nav-bar { display: none; }
+    .slide { border: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Floating Navigation Controls -->
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="prevSlide()">◀ Previous</button>
+    <button class="nav-btn" onclick="nextSlide()">Next ▶</button>
+    <button class="nav-btn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+  </div>
+
+  <!-- ==================== SLIDE 1: TITLE SLIDE ==================== -->
+  <section class="slide title-slide" id="slide-1">
+    <div class="badge-banner">
+      <span class="slide-tag" style="border-color: #ff6500; color: #ff6500;">Smart India Hackathon</span>
+      <span class="slide-tag">MoES / IMD</span>
+      <span class="slide-tag" style="border-color: #10b981; color: #10b981;">Disaster Management</span>
+    </div>
+    <h1>Weather<span>GPT</span></h1>
+    <div class="tagline">
+      Domain-Adapted Conversational AI & GIS Disaster Intelligence System for the Ministry of Earth Sciences & India Meteorological Department
+    </div>
+
+    <div class="meta-box">
+      <div>
+        <span>Ministry / Dept</span>
+        <strong>Ministry of Earth Sciences / IMD</strong>
+      </div>
+      <div>
+        <span>Core Innovation</span>
+        <strong>Multi-Sector Personas & Vernacular Voice AI</strong>
+      </div>
+      <div>
+        <span>Platform</span>
+        <strong>Android 14+ (Compose) + FastAPI Backend</strong>
+      </div>
+    </div>
+
+    <div class="speaker-notes" style="max-width: 800px; margin-top: 35px; text-align: left;">
+      <strong>Speaker Script (10s):</strong> "Good morning esteemed jury! Today we present WeatherGPT — bridging India's critical last-mile weather dissemination gap through domain-adapted conversational AI, Doppler Radar GIS intelligence, and life-saving offline resilience."
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 2: THE PROBLEM ==================== -->
+  <section class="slide" id="slide-2">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>The Last-Mile Dissemination Crisis</h2>
+        <div class="slide-subtitle">India has world-class meteorological models, but data is inaccessible to ground stakeholders.</div>
+      </div>
+      <span class="slide-tag" style="border-color: #ef4444; color: #ef4444;">The Challenge</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card alert">
+          <h3>⚠️ Meteorological Jargon</h3>
+          <p>
+            Official IMD bulletins use synoptic terminology ("convective instability", "isobaric trough", "TAF/METAR") that <strong>95% of rural farmers and fishermen cannot comprehend</strong>.
+          </p>
+          <ul>
+            <li>Delayed protective action</li>
+            <li>Costly fertilizer wash-off</li>
+            <li>Maritime safety hazards</li>
+          </ul>
+        </div>
+
+        <div class="card alert">
+          <h3>🌐 Vernacular & Literacy Gap</h3>
+          <p>
+            Most modern weather apps are in English and text-heavy. India's coastal fishermen and agricultural workforce require <strong>natural voice in their regional dialects</strong>.
+          </p>
+          <ul>
+            <li>No two-way conversational voice</li>
+            <li>Lack of regional dialect support</li>
+            <li>Zero interactive audio playback</li>
+          </ul>
+        </div>
+
+        <div class="card alert">
+          <h3>⚡ Disaster Zone Blackouts</h3>
+          <p>
+            When severe tropical cyclones or heavy floods strike, <strong>local cell towers collapse</strong>. Cloud-reliant weather apps freeze, leaving frontline victims stranded without alerts.
+          </p>
+          <ul>
+            <li>Critical communication breakdown</li>
+            <li>No offline local caching</li>
+            <li>Loss of emergency advisories</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (30s):</strong> "IMD forecasts cyclones and cloudbursts hours in advance. But if a Tamil fisherman at sea or a cotton farmer in Maharashtra cannot read or understand technical bulletins, that data fails its mission. Add cellular blackouts during cyclones, and the last-mile completely breaks down. That is the exact problem WeatherGPT solves."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 2 of 8</span>
+      <span>Problem Statement: <strong>MoES / IMD</strong></span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 3: THE SOLUTION ==================== -->
+  <section class="slide" id="slide-3">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>Introducing WeatherGPT</h2>
+        <div class="slide-subtitle">An end-to-end multi-sector conversational AI & real-time GIS platform.</div>
+      </div>
+      <span class="slide-tag">Core Solution</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card highlight">
+          <h3>💬 Sector-Aware Conversational AI</h3>
+          <p>
+            WeatherGPT synthesizes raw atmospheric data into tailored, actionable guidance matching <strong>6 distinct user personas</strong> (Farmers, Pilots, Fishermen, Urban Planners, Researchers, and Citizens).
+          </p>
+          <ul>
+            <li>Interactive 5-day inline forecast cards</li>
+            <li>Sector-specific protective advisories</li>
+            <li>One-click prompt suggestions tailored by persona</li>
+          </ul>
+        </div>
+
+        <div class="card highlight">
+          <h3>🗣️ 6 Indian Languages + Voice Engine</h3>
+          <p>
+            Full voice input (`SpeechRecognizer`) with real-time audio waveform visualizer and Text-to-Speech (`TTS`) read-aloud in <strong>English, हिन्दी, తెలుగు, தமிழ், বাংলা, and मराठी</strong>.
+          </p>
+          <ul>
+            <li>Hands-free interaction for fieldwork</li>
+            <li>Dialect-aware conversational responses</li>
+            <li>Voice auto-play setting for accessibility</li>
+          </ul>
+        </div>
+
+        <div class="card highlight">
+          <h3>🗺️ Interactive Doppler Radar & GIS Tracking</h3>
+          <p>
+            Native canvas visualization of India's Doppler Weather Radar (DWR) stations with layer toggles for <strong>Radar Reflectivity (dBZ)</strong>, <strong>Cyclone Track & Cone of Uncertainty</strong>, and Nowcast playback.
+          </p>
+        </div>
+
+        <div class="card highlight">
+          <h3>🛡️ Offline-First Resilient Architecture</h3>
+          <p>
+            Built on a local <strong>Room Database</strong> and network observers. When cellular connectivity drops during a storm, the app automatically switches to cached alerts, radar frames, and safety guides.
+          </p>
+        </div>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (30s):</strong> "WeatherGPT is not just another weather app. It is a sector-aware conversational intelligence system. It speaks 6 Indian languages, visualizes India's Doppler radar network, broadcasts real-time color-coded IMD alerts, and functions 100% offline when storms take down cell towers."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 3 of 8</span>
+      <span>WeatherGPT Overview</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 4: SECTOR PERSONAS ==================== -->
+  <section class="slide" id="slide-4">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>Specialized Sector Intelligence</h2>
+        <div class="slide-subtitle">One atmospheric dataset — Six hyper-targeted operational outputs.</div>
+      </div>
+      <span class="slide-tag">Persona Matrix</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card">
+          <h3>🌾 Farmer / Krishi</h3>
+          <p><strong>Focus:</strong> Gramin Krishi Mausam Seva (GKMS)</p>
+          <ul>
+            <li>Soil moisture & Kharif/Rabi sowing windows</li>
+            <li>Pesticide spraying vs rain wash-off risk</li>
+            <li>Crop shelter guidance for gusty winds</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>✈️ Aviation</h3>
+          <p><strong>Focus:</strong> Aerodrome Met & Airfield Safety</p>
+          <ul>
+            <li>METAR/TAF briefings & SIGMET warnings</li>
+            <li>Cumulonimbus (CB) cloud ceiling (FL400)</li>
+            <li>Low-level wind shear & crosswind limits</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🚢 Marine & Coastal</h3>
+          <p><strong>Focus:</strong> INCOIS Maritime Safety</p>
+          <ul>
+            <li>Significant wave heights (3.5m - 4.5m)</li>
+            <li>Squally wind warnings for trawlers</li>
+            <li>Distant Cautionary Signals (DC-I)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🏙️ Urban Planner</h3>
+          <p><strong>Focus:</strong> Disaster Mitigation & Civic Health</p>
+          <ul>
+            <li>Urban Heat Island (UHI) index & wet-bulb temp</li>
+            <li>Waterlogging vulnerability in underpasses</li>
+            <li>Dewatering pump pre-deployment alerts</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🔬 Climate Researcher</h3>
+          <p><strong>Focus:</strong> Synoptic Dynamics & Modeling</p>
+          <ul>
+            <li>GFS vs NCUM/WRF model ensemble spread</li>
+            <li>Madden-Julian Oscillation (MJO) phase</li>
+            <li>Cyclogenesis probability in Bay of Bengal</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>👥 General Public</h3>
+          <p><strong>Focus:</strong> Daily Life & Outdoor Routines</p>
+          <ul>
+            <li>Hour-by-hour rain probability percentages</li>
+            <li>UV index & heatwave precautions</li>
+            <li>5-day visual temperature trend cards</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (25s):</strong> "A pilot, a farmer, and a city engineer don't need the same information. If you ask WeatherGPT about tomorrow's weather in farmer mode, it talks about fertilizer wash-off. Switch to aviation mode, and it provides a METAR brief with wind shear."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 4 of 8</span>
+      <span>Dynamic Domain Adaptation</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 5: RADAR & ALERTS ==================== -->
+  <section class="slide" id="slide-5">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>GIS Radar & Official IMD Alert Protocol</h2>
+        <div class="slide-subtitle">Visual tracking and standardized 4-tier disaster notification system.</div>
+      </div>
+      <span class="slide-tag">Disaster Management</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>📡 DWR Doppler Radar & Cyclone Tracking</h3>
+          <p>
+            Interactive GIS visualizer mapping national radar stations (Delhi, Mumbai, Chennai, Kolkata, Visakhapatnam):
+          </p>
+          <ul>
+            <li><strong>Radar Reflectivity (dBZ):</strong> Convective storm cells</li>
+            <li><strong>Cyclone Landfall Cone:</strong> Visual uncertainty track</li>
+            <li><strong>Rainfall Accumulation:</strong> Multi-day mm metrics</li>
+            <li><strong>Surface Wind Vectors:</strong> Wind streamline flow</li>
+            <li><strong>Playback Time Slider:</strong> -3h past to +1h WRF model nowcast</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🚨 Official IMD Color-Coded Alert Protocol</h3>
+          <p>
+            Standardized disaster warnings integrated with real-time WebSockets and high-priority heads-up device notifications:
+          </p>
+          <div style="margin-top: 10px; display: grid; gap: 8px;">
+            <div style="background: rgba(239, 68, 68, 0.2); border-left: 4px solid #ef4444; padding: 6px 12px; border-radius: 4px; font-size: 9.5pt;">
+              <strong style="color: #ef4444;">🔴 RED (WARNING):</strong> Take Action — Flash flood (>200mm) or Severe Cyclone.
+            </div>
+            <div style="background: rgba(249, 115, 22, 0.2); border-left: 4px solid #f97316; padding: 6px 12px; border-radius: 4px; font-size: 9.5pt;">
+              <strong style="color: #f97316;">🟠 ORANGE (ALERT):</strong> Be Prepared — Heatwaves & squally gales (65 km/h).
+            </div>
+            <div style="background: rgba(234, 179, 8, 0.2); border-left: 4px solid #eab308; padding: 6px 12px; border-radius: 4px; font-size: 9.5pt;">
+              <strong style="color: #eab308;">🟡 YELLOW (WATCH):</strong> Be Updated — Thunderstorms and lightning strikes.
+            </div>
+            <div style="background: rgba(34, 197, 94, 0.2); border-left: 4px solid #22c55e; padding: 6px 12px; border-radius: 4px; font-size: 9.5pt;">
+              <strong style="color: #22c55e;">🟢 GREEN (NORMAL):</strong> No Warning — Safe seasonal conditions.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (25s):</strong> "On this screen, we strictly follow IMD's official Red, Orange, Yellow, and Green protocol. We also give users a live GIS Doppler Radar map showing real-time reflectivity in dBZ and cyclone landfall tracks with an interactive time-playback slider."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 5 of 8</span>
+      <span>Radar GIS & Alerts</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 6: TECH ARCHITECTURE ==================== -->
+  <section class="slide" id="slide-6">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>System Architecture & Engineering Rigor</h2>
+        <div class="slide-subtitle">Modern Android 14+ Jetpack Compose client + Scalable FastAPI async backend.</div>
+      </div>
+      <span class="slide-tag">Tech Stack</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card">
+          <h3>📱 Android Native UI Layer</h3>
+          <ul>
+            <li><strong>Jetpack Compose:</strong> 100% declarative UI</li>
+            <li><strong>Adaptive Navigation Suite:</strong> Phones & tablets</li>
+            <li><strong>Dagger Hilt:</strong> Clean Dependency Injection</li>
+            <li><strong>Coroutines & Flow:</strong> Reactive state management</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>⚡ Async Backend & WebSockets</h3>
+          <ul>
+            <li><strong>FastAPI (Python):</strong> Non-blocking async endpoints</li>
+            <li><strong>WebSocket Channels:</strong> Instant nowcast pushes</li>
+            <li><strong>Pydantic v2:</strong> Strict data contracts</li>
+            <li><strong>RAG Grounding:</strong> Prevents LLM hallucinations</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🛡️ Offline-First Data Pipeline</h3>
+          <ul>
+            <li><strong>Room Database:</strong> Local SQLite data persistence</li>
+            <li><strong>DataStore:</strong> User preferences & roles</li>
+            <li><strong>ConnectivityObserver:</strong> Auto offline transition</li>
+            <li><strong>NotificationManager:</strong> High-priority alerts</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (20s):</strong> "Our architecture is built for production reliability. The Jetpack Compose frontend communicates with a FastAPI async backend, with WebSockets for real-time nowcasts. A local Room database guarantees that all critical advisories remain readable even when internet connection drops."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 6 of 8</span>
+      <span>Architecture & Design</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 7: LIVE DEMO ==================== -->
+  <section class="slide" id="slide-7">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>Live Demonstration Sequence</h2>
+        <div class="slide-subtitle">Step-by-step walkthrough to witness WeatherGPT in action.</div>
+      </div>
+      <span class="slide-tag" style="border-color: #10b981; color: #10b981;">Live Demo</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-4">
+        <div class="card highlight">
+          <div style="font-size: 24pt; margin-bottom: 8px;">1️⃣</div>
+          <h3>Role & Dialect</h3>
+          <p>Select <strong>Farmer (Krishi)</strong> and <strong>Hindi</strong> during Onboarding to demonstrate customized vocabulary and dialect adaptation.</p>
+        </div>
+
+        <div class="card highlight">
+          <div style="font-size: 24pt; margin-bottom: 8px;">2️⃣</div>
+          <h3>Voice & Waveform</h3>
+          <p>Tap the microphone; speak a query in Hindi; watch the pulsating RMS audio waveform and listen to the instant read-aloud TTS response.</p>
+        </div>
+
+        <div class="card highlight">
+          <div style="font-size: 24pt; margin-bottom: 8px;">3️⃣</div>
+          <h3>Doppler Radar</h3>
+          <p>Open the GIS Map; switch to <strong>Cyclone Track</strong>; press Play to watch the animated trajectory and WRF nowcast model output.</p>
+        </div>
+
+        <div class="card highlight">
+          <div style="font-size: 24pt; margin-bottom: 8px;">4️⃣</div>
+          <h3>Simulated Red Alert</h3>
+          <p>Navigate to Alerts; tap <strong>'Simulate Red Alert'</strong> to trigger an immediate heads-up device notification and color-coded alert card.</p>
+        </div>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (30s):</strong> "Let us show you WeatherGPT live on the device! First, we choose Farmer mode in Hindi. We tap the mic and speak — the app responds verbally with fertilizer guidance. Next, we open the GIS Radar screen and animate the cyclone track. Finally, we trigger a Red Alert to show our instant notification pipeline."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 7 of 8</span>
+      <span>Live Proof of Concept</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 8: IMPACT & ROADMAP ==================== -->
+  <section class="slide" id="slide-8">
+    <div class="slide-header">
+      <div class="slide-title-area">
+        <h2>National Impact & Future Scalability</h2>
+        <div class="slide-subtitle">Democratizing weather intelligence for 1.4 Billion citizens.</div>
+      </div>
+      <span class="slide-tag" style="border-color: #ff6500; color: #ff6500;">Roadmap & Vision</span>
+    </div>
+
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card">
+          <h3>🇮🇳 Direct National Integration</h3>
+          <ul>
+            <li>Direct API ingestion with <strong>Meghdoot</strong> and <strong>Mausam</strong> portals</li>
+            <li>INCOIS ocean state telemetry integration</li>
+            <li>State Disaster Management Authority (SDMA) pipelines</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🤖 Edge AI & On-Device LLM</h3>
+          <ul>
+            <li>Quantized Gemma-2B / Small Language Model on mobile</li>
+            <li>100% offline conversational reasoning without cloud dependency</li>
+            <li>Ultra-low latency in remote Himalayan and coastal valleys</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📡 Emergency Cell Broadcast (CBC)</h3>
+          <ul>
+            <li>Government Cell Broadcast System (CBC) SMS integration</li>
+            <li>Satellite NavIC / GAGAN alert beacon decoding</li>
+            <li>Zero-cost life-saving safety for rural communities</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; text-align: center; background: rgba(0, 210, 223, 0.08); padding: 18px; border-radius: 12px; border: 1px solid #00d2df;">
+        <h3 style="color: #00d2df; margin-bottom: 4px;">Thank You, Esteemed Jury!</h3>
+        <p style="color: #e2e8f0; font-size: 11pt;">WeatherGPT: Empowering Every Indian Citizen with Actionable Meteorological Intelligence.</p>
+      </div>
+
+      <div class="speaker-notes">
+        <strong>Speaker Script (15s):</strong> "WeatherGPT bridges the last-mile gap for 140 million farmers and millions of coastal citizens. With edge-AI and direct IMD API integration, it turns meteorological science into life-saving action. Thank you, and we look forward to your questions!"
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Smart India Hackathon</span>
+      <span>Slide 8 of 8</span>
+      <span>Ministry of Earth Sciences / IMD</span>
+    </div>
+  </section>
+
+  <!-- Interactive Slide Controller Script -->
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 8;
+
+    function showSlide(n) {
+      if (n < 1) n = 1;
+      if (n > totalSlides) n = totalSlides;
+      currentSlide = n;
+      const target = document.getElementById('slide-' + currentSlide);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard Arrow navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      }
+    });
+  </script>
+</body>
+</html>
